@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface UserService {
 
-    public Collection<User> getAll();
+    Collection<User> getAll();
 
-    public User save(User user);
+    User save(User user);
 }

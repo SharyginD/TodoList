@@ -2,6 +2,7 @@ package my.project.service.impl;
 
 import my.project.domain.dto.User;
 import my.project.domain.entity.UserEntity;
+import my.project.exception.customException.NonUniqueUserException;
 import my.project.repository.UserRepository;
 import my.project.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -36,8 +37,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        UserEntity userEntity = new UserEntity();
-        modelMapper.map(user, userEntity);
+        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+        if (repository.existsByLogin(user.getLogin())) {
+            throw new NonUniqueUserException("User with login = " + user.getLogin() + " already exists");
+        }
         return modelMapper.map(repository.save(userEntity), User.class);
     }
 }

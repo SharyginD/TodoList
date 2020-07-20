@@ -26,10 +26,4 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    public UserEntity(String login, String password) {
-        this.login = login;
-        this.password = password;
-        this.role = Role.ROLE_USER;
-    }
 }

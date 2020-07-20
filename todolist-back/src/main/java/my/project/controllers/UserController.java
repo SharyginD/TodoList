@@ -3,11 +3,14 @@ package my.project.controllers;
 import my.project.domain.dto.User;
 import my.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -20,12 +23,12 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public Collection<User> getAll() {
-        return service.getAll();
+    public ResponseEntity<Collection<User>> getAll() {
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 
     @PostMapping("/user")
-    public User save(@RequestBody User user) {
-        return service.save(user);
+    public ResponseEntity<User> save(@Valid @RequestBody User user) {
+        return new ResponseEntity<>(service.save(user), HttpStatus.OK);
     }
 }

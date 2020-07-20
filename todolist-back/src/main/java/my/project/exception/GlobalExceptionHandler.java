@@ -1,5 +1,6 @@
 package my.project.exception;
 
+import my.project.exception.customException.NonUniqueUserException;
 import my.project.exception.customException.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    //404
     @ExceptionHandler(ResourceNotFoundException.class)
     protected ResponseEntity<Object> resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
 
@@ -26,6 +28,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    //400
+    @ExceptionHandler(NonUniqueUserException.class)
+    protected ResponseEntity<Object> nonUniqueUserException(NonUniqueUserException ex, WebRequest request) {
+
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+
+        return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    //400
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
@@ -33,10 +45,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, message);
         List<ApiSubErrors> list = ex.getBindingResult().getFieldErrors().stream()
                 .map(err -> {
-                    return new ApiSubErrors(ex.getBindingResult().getObjectName(),
-                            ex.getBindingResult().getFieldError().getField(),
-                            ex.getBindingResult().getFieldError().getRejectedValue().toString(),
-                            ex.getBindingResult().getFieldError().getDefaultMessage());
+                    return new ApiSubErrors(err.getObjectName(),
+                            err.getField(),
+                            err.getRejectedValue().toString(),
+                            err.getDefaultMessage());
                 }).collect(Collectors.toList());
 
         apiError.setSubErrorsList(list);
@@ -44,6 +56,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    //405
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String message = "Method not allowed for this resource";
@@ -53,6 +66,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    //400
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
                                                                   HttpStatus status, WebRequest request) {
