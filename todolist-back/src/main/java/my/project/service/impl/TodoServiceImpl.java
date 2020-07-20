@@ -2,6 +2,7 @@ package my.project.service.impl;
 
 import my.project.domain.dto.Todo;
 import my.project.domain.entity.TodoEntity;
+import my.project.exception.customException.ResourceNotFoundException;
 import my.project.repository.TodoRepository;
 import my.project.service.TodoService;
 import org.modelmapper.ModelMapper;
@@ -42,7 +43,9 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Todo delete(int id) {
-        Todo todo = modelMapper.map(repository.findById(id).get(), Todo.class);
+        Todo todo = modelMapper.map(repository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Note with id = " + id + " not found")),
+                Todo.class);
         repository.deleteById(id);
         return todo;
     }
