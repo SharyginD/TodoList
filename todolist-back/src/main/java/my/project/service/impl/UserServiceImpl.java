@@ -5,6 +5,7 @@ import my.project.domain.entity.UserEntity;
 import my.project.exception.customException.NonUniqueUserException;
 import my.project.repository.UserRepository;
 import my.project.service.UserService;
+import my.project.utils.Decoder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,13 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository repository;
     private ModelMapper modelMapper;
+    private Decoder decoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository repository, ModelMapper modelMapper, Decoder decoder) {
         this.repository = repository;
         this.modelMapper = modelMapper;
+        this.decoder = decoder;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
+        user = decoder.decode(user);
         UserEntity userEntity = modelMapper.map(user, UserEntity.class);
         if (repository.existsByLogin(user.getLogin())) {
             throw new NonUniqueUserException("User with login = " + user.getLogin() + " already exists");
