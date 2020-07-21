@@ -6,7 +6,7 @@ import my.project.exception.customException.NonUniqueUserException;
 import my.project.repository.UserRepository;
 import my.project.service.UserService;
 import my.project.utils.Decoder;
-import org.modelmapper.ModelMapper;
+import my.project.utils.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,22 +18,22 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private UserRepository repository;
-    private ModelMapper modelMapper;
+    private UserMapper mapper;
     private Decoder decoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository, ModelMapper modelMapper, Decoder decoder) {
+    public UserServiceImpl(UserRepository repository, UserMapper mapper, Decoder decoder) {
         this.repository = repository;
-        this.modelMapper = modelMapper;
+        this.mapper = mapper;
         this.decoder = decoder;
     }
 
     @Override
     public Collection<User> getAll() {
         Iterable<UserEntity> list = repository.findAll();
-        List<User> todoList = new ArrayList();
+        List<User> todoList = new ArrayList<>();
         for (UserEntity element : list) {
-            todoList.add(modelMapper.map(element, User.class));
+            todoList.add(mapper.toDTO(element));
         }
         return todoList;
     }
@@ -41,10 +41,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(User user) {
         user = decoder.decode(user);
-        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+        UserEntity userEntity = mapper.toEntity(user);
         if (repository.existsByLogin(user.getLogin())) {
             throw new NonUniqueUserException("User with login = " + user.getLogin() + " already exists");
         }
-        return modelMapper.map(repository.save(userEntity), User.class);
+        return mapper.toDTO(repository.save(userEntity));
     }
 }

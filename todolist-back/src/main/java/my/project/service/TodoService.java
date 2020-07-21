@@ -6,9 +6,9 @@ import java.util.Collection;
 
 public interface TodoService {
 
-    Collection<Todo> getAll();
+    Collection<Todo> getAll(int userId);
 
-    Todo save(Todo todo);
+    Todo save(Todo todo, int userId);
 
     Todo delete(int id);
 }

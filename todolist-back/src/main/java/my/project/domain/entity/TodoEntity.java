@@ -19,4 +19,7 @@ public class TodoEntity {
 
     @Column(name = "note")
     private String note;
+
+    @ManyToOne()
+    private UserEntity user;
 }

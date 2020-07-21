@@ -22,14 +22,14 @@ public class TodoController {
         this.service = service;
     }
 
-    @GetMapping("/todo")
-    public ResponseEntity<Collection<Todo>> getAll() {
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
+    @GetMapping("/{userId}/todo")
+    public ResponseEntity<Collection<Todo>> getAll(@PathVariable("userId") int userId) {
+        return new ResponseEntity<>(service.getAll(userId), HttpStatus.OK);
     }
 
-    @PostMapping("/todo")
-    public ResponseEntity<Todo> save(@Valid @RequestBody Todo todo) {
-        return new ResponseEntity<>(service.save(todo), HttpStatus.OK);
+    @PostMapping("/{userId}/todo")
+    public ResponseEntity<Todo> save(@Valid @RequestBody Todo todo, @PathVariable("userId") int userId) {
+        return new ResponseEntity<>(service.save(todo, userId), HttpStatus.OK);
     }
 
     @DeleteMapping("/todo/{todoId}")

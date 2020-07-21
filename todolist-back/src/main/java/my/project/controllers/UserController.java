@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     public ResponseEntity<Collection<User>> getAll() {
         return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
