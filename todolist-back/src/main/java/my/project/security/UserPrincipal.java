@@ -21,7 +21,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> list = new ArrayList();
+        List<GrantedAuthority> list = new ArrayList<>();
         GrantedAuthority authority = new SimpleGrantedAuthority(userEntity.getRole().toString());
         list.add(authority);
 

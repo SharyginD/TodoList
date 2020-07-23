@@ -28,15 +28,15 @@ public class TodoServiceTest {
     @MockBean
     private TodoRepository repository;
 
-    private List<Todo> listDTO = Arrays.asList(
-            new Todo(1, "Note 1"),
-            new Todo(2, "Note 2"),
-            new Todo(3, "Note 3"));
-
-    private List<TodoEntity> listEntity = Arrays.asList(
-            new TodoEntity(1, "Note 1", new UserEntity()),
-            new TodoEntity(2, "Note 2", new UserEntity()),
-            new TodoEntity(3, "Note 3", new UserEntity()));
+//    private List<Todo> listDTO = Arrays.asList(
+//            new Todo(1, "Note 1"),
+//            new Todo(2, "Note 2"),
+//            new Todo(3, "Note 3"));
+//
+//    private List<TodoEntity> listEntity = Arrays.asList(
+//            new TodoEntity(1, "Note 1", new UserEntity()),
+//            new TodoEntity(2, "Note 2", new UserEntity()),
+//            new TodoEntity(3, "Note 3", new UserEntity()));
 
 //    @Test
 //    public void getAllTest() {

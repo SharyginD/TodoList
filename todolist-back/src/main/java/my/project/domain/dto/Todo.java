@@ -1,5 +1,6 @@
 package my.project.domain.dto;
 
+
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -18,3 +19,5 @@ public class Todo {
     @Size(max = 50, message = "Max length is 50 symbols")
     private String note;
 }
+
+

@@ -33,7 +33,7 @@ public class TodoController {
     }
 
     @DeleteMapping("/todo/{todoId}")
-    public ResponseEntity<Todo> delete(@PathVariable("todoId") int id) {
-        return new ResponseEntity<>(service.delete(id), HttpStatus.OK);
+    public ResponseEntity<Todo> delete(@PathVariable("todoId") int todoId) {
+        return new ResponseEntity<>(service.delete(todoId), HttpStatus.OK);
     }
 }

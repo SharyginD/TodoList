@@ -7,38 +7,34 @@ import my.project.exception.customException.ResourceNotFoundException;
 import my.project.repository.TodoRepository;
 import my.project.repository.UserRepository;
 import my.project.service.TodoService;
-import my.project.utils.mapper.TodoMapper;
+import my.project.utils.mapStruct.TodoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class TodoServiceImpl implements TodoService {
 
-    private TodoRepository repository;
+    private TodoRepository todoRepository;
     private UserRepository userRepository;
-    private TodoMapper mapper;
 
     @Autowired
-    public TodoServiceImpl(TodoRepository repository, UserRepository userRepository, TodoMapper mapper) {
-        this.repository = repository;
+    public TodoServiceImpl(TodoRepository todoRepository, UserRepository userRepository) {
+        this.todoRepository = todoRepository;
         this.userRepository = userRepository;
-        this.mapper = mapper;
+
     }
 
     @Override
     public Collection<Todo> getAll(int userId) {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User with id = " + userId + " not found"));
-
-        List<Todo> todoList = new ArrayList<>();
-        for (TodoEntity element : userEntity.getTodoEntities()) {
-            todoList.add(mapper.toDTO(element));
-        }
-        return todoList;
+        return StreamSupport.stream(userEntity.getEntityList().spliterator(), false)
+                .map(entity -> TodoMapper.INSTANCE.toDTO(entity))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -46,21 +42,21 @@ public class TodoServiceImpl implements TodoService {
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User with id = " + userId + " not found"));
 
-        TodoEntity entity = mapper.toEntity(todo);
+        TodoEntity todoEntity = TodoMapper.INSTANCE.toEntity(todo);
 
-        userEntity.getTodoEntities().add(entity);
-        entity.setUser(userEntity);
+        userEntity.getEntityList().add(todoEntity);
+        todoEntity.setUser(userEntity);
 
-        return mapper.toDTO(repository.save(entity));
+        return TodoMapper.INSTANCE.toDTO(todoRepository.save(todoEntity));
     }
 
     @Override
     public Todo delete(int id) {
 
-        TodoEntity todo = repository.findById(id).orElseThrow(
+        TodoEntity todo = todoRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Note with id = " + id + " not found"));
-        repository.delete(todo);
+        todoRepository.delete(todo);
 
-        return mapper.toDTO(todo);
+        return TodoMapper.INSTANCE.toDTO(todo);
     }
 }

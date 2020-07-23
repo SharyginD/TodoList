@@ -27,5 +27,5 @@ public class User {
 
     private Role role = Role.ROLE_USER;
 
-    private List<Todo> listTodo = new ArrayList();
+    private List<Todo> listTodo = new ArrayList<>();
 }

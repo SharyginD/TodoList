@@ -30,5 +30,5 @@ public class UserEntity {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TodoEntity> todoEntities = new ArrayList();
+    private List<TodoEntity> entityList = new ArrayList<>();
 }
